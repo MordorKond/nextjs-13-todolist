@@ -1,0 +1,4 @@
+npx create-next-app@latest .
+npx prisma init --datasource-provider sqlite
+
+npx prisma migrate dev --name init //do migration in our dev 
