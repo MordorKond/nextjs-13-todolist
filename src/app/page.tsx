@@ -1,11 +1,15 @@
+import TodoItem from "@/components/TodoItem.component"
 import { prisma } from "@/db"
 import Link from "next/link"
 
 const getTodos = () => prisma.todo.findMany()
 
+const updateTodo = async (id:string, complete:boolean) => {
+   "use server"
+   await prisma.todo.update({where:{id},data:{complete}})
+}
 export default async function Home() {
   const todos = await getTodos() 
-  // await prisma.todo.create({data:{title:'todoggo',complete:false}})
 
   return (
    <> 
@@ -17,7 +21,7 @@ export default async function Home() {
        </header>
        <ul className="p-4">
          {todos.map(todo=>{
-                     return <TodoItem key={todo.id} {...todo} />
+                 return <TodoItem key={todo.id} {...todo} updateTodo={updateTodo} />
                  })}
        </ul>
 
@@ -25,13 +29,3 @@ export default async function Home() {
   )
 }
 
-const TodoItem = ({id, title, complete}:{id:string, title:string, complete:boolean}) => {
-    return (
-           <>
-               <li className="flex gap-1 ">
-                 <input type="checkbox" id={id} className="cursor-pointer peer" />
-                 <label htmlFor={id} className="peer-checked:line-through cursor-pointer peer-checked:text-slate-500">{title}</label>
-               </li>
-           </>
-           )
-}
